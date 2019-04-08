@@ -16,6 +16,9 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" class="table-expand">
+            <el-form-item label="商品Id">
+              <span>{{ props.row.id }}</span>
+            </el-form-item>
             <el-form-item label="宣传画廊">
               <img v-for="pic in props.row.gallery" :key="pic" :src="pic" class="gallery">
             </el-form-item>
