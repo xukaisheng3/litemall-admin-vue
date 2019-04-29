@@ -173,6 +173,16 @@ export const asyncRouterMap = [
         }
       },
       {
+        path: 'doorstore',
+        component: () => import('@/views/mall/doorstore'),
+        name: 'region',
+        meta: {
+          perms: ['GET /admin/doorstore/list', 'POST /admin/doorstore/create', 'GET /admin/doorstore/read', 'POST /admin/doorstore/update', 'POST /admin/doorstore/delete'],
+          title: '门店管理',
+          noCache: true
+        }
+      },
+      {
         path: 'brand',
         component: () => import('@/views/mall/brand'),
         name: 'brand',
