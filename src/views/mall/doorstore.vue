@@ -5,8 +5,8 @@
     <div class="filter-container">
       <el-input v-model="listQuery.id" clearable class="filter-item" style="width: 200px;" placeholder="请输入门店ID"/>
       <el-input v-model="listQuery.name" clearable class="filter-item" style="width: 200px;" placeholder="请输入门店名称"/>
-      <el-button v-permission="['GET /admin/brand/list']" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
-      <el-button v-permission="['POST /admin/brand/create']" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-permission="['GET /admin/doorstore/list']" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">查找</el-button>
+      <el-button v-permission="['POST /admin/doorstore/create']" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
       <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
     </div>
 
@@ -29,8 +29,8 @@
 
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="['POST /admin/brand/update']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="['POST /admin/brand/delete']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-permission="['POST /admin/doorstore/update']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="['POST /admin/doorstore/delete']" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -99,13 +99,13 @@
 </style>
 
 <script>
-import { listBrand, createBrand, updateBrand, deleteBrand } from '@/api/brand'
+import { listdoorstore, createdoorstore, updatedoorstore, deletedoorstore } from '@/api/doorstore'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
-  name: 'Brand',
+  name: 'Doorstore',
   components: { Pagination },
   data() {
     return {
@@ -155,7 +155,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      listBrand(this.listQuery)
+      listdoorstore(this.listQuery)
         .then(response => {
           this.list = response.data.data.items
           this.total = response.data.data.total
@@ -194,7 +194,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          createBrand(this.dataForm)
+          createdoorstore(this.dataForm)
             .then(response => {
               this.list.unshift(response.data.data)
               this.dialogFormVisible = false
@@ -223,7 +223,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          updateBrand(this.dataForm)
+          updatedoorstore(this.dataForm)
             .then(() => {
               for (const v of this.list) {
                 if (v.id === this.dataForm.id) {
@@ -248,7 +248,7 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteBrand(row)
+      deletedoorstore(row)
         .then(response => {
           this.$notify.success({
             title: '成功',
