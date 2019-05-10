@@ -39,3 +39,11 @@ export function deletedoorstore(data) {
     data
   })
 }
+
+export function doorstoreOptions(query) {
+  return request({
+    url: '/doorstore/options',
+    method: 'get',
+    params: query
+  })
+}

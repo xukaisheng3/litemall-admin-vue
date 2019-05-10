@@ -13,5 +13,8 @@
     "development":{
       "plugins": ["dynamic-import-node"]
     }
-  }
+  },
+  "ignore": [
+    "./src/assets/libs/tmap.js"
+  ]
 }

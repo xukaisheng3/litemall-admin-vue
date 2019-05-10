@@ -27,6 +27,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column align="center" label="门店角色" prop="doorstoreIds">
+        <template slot-scope="scope">
+          <el-tag v-for="doorstoreId in scope.row.doorstoreIds" :key="doorstoreId" type="primary" style="margin-right: 20px;"> {{ formatDoorstore(doorstoreId) }} </el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" label="操作" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button v-permission="['POST /admin/admin/update']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
@@ -62,6 +68,15 @@
           <el-select v-model="dataForm.roleIds" multiple placeholder="请选择">
             <el-option
               v-for="item in roleOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="门店角色" prop="doorstoreIds">
+          <el-select v-model="dataForm.doorstoreIds" multiple placeholder="请选择">
+            <el-option
+              v-for="item in doorstoreOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value"/>
@@ -107,6 +122,7 @@
 <script>
 import { listAdmin, createAdmin, updateAdmin, deleteAdmin } from '@/api/admin'
 import { roleOptions } from '@/api/role'
+import { doorstoreOptions } from '@/api/doorstore'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -120,6 +136,7 @@ export default {
       list: null,
       total: 0,
       roleOptions: null,
+      doorstoreOptions: null,
       listLoading: true,
       listQuery: {
         page: 1,
@@ -133,7 +150,8 @@ export default {
         username: undefined,
         password: undefined,
         avatar: undefined,
-        roleIds: []
+        roleIds: [],
+        doorstoreIds: []
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -164,12 +182,24 @@ export default {
       .then(response => {
         this.roleOptions = response.data.data
       })
+    doorstoreOptions()
+      .then(response => {
+        this.doorstoreOptions = response.data.data
+      })
   },
   methods: {
     formatRole(roleId) {
       for (let i = 0; i < this.roleOptions.length; i++) {
         if (roleId === this.roleOptions[i].value) {
           return this.roleOptions[i].label
+        }
+      }
+      return ''
+    },
+    formatDoorstore(doorstoreId) {
+      for (let i = 0; i < this.doorstoreOptions.length; i++) {
+        if (doorstoreId === this.doorstoreOptions[i].value) {
+          return this.doorstoreOptions[i].label
         }
       }
       return ''
@@ -198,7 +228,8 @@ export default {
         username: undefined,
         password: undefined,
         avatar: undefined,
-        roleIds: []
+        roleIds: [],
+        doorstoreIds: []
       }
     },
     uploadAvatar: function(response) {

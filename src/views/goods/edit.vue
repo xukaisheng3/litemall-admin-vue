@@ -38,7 +38,15 @@
             <el-radio :label="false">未售</el-radio>
           </el-radio-group>
         </el-form-item>
-
+        <el-form-item label="所属门店" prop="doorstoreIds">
+          <el-select v-model="goods.doorstoreIds" multiple placeholder="请选择">
+            <el-option
+              v-for="item in doorstoreOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
+        </el-form-item>
         <el-form-item label="商品图片">
           <el-upload
             :headers="headers"
@@ -288,6 +296,7 @@
 import { detailGoods, editGoods, listCatAndBrand } from '@/api/goods'
 import { createStorage, uploadPath } from '@/api/storage'
 import Editor from '@tinymce/tinymce-vue'
+import { doorstoreOptions } from '@/api/doorstore'
 import { MessageBox } from 'element-ui'
 import { getToken } from '@/utils/auth'
 
@@ -304,7 +313,8 @@ export default {
       categoryList: [],
       brandList: [],
       categoryIds: [],
-      goods: { gallery: [] },
+      doorstoreOptions: null,
+      goods: { gallery: [], doorstoreIds: [] },
       specVisiable: false,
       specForm: { specification: '', value: '', picUrl: '' },
       specifications: [{ specification: '规格', value: '标准', picUrl: '' }],
@@ -361,6 +371,10 @@ export default {
   },
   created() {
     this.init()
+    doorstoreOptions()
+      .then(response => {
+        this.doorstoreOptions = response.data.data
+      })
   },
   methods: {
     init: function() {
