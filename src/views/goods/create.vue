@@ -428,6 +428,13 @@ export default {
         products: this.products,
         attributes: this.attributes
       }
+      if (this.goods.doorstoreIds === undefined || this.goods.doorstoreIds.length <= 0) {
+        MessageBox.alert('门店必须填', '警告', {
+          confirmButtonText: '确定',
+          type: 'error'
+        })
+        return false
+      }
       publishGoods(finalGoods).then(response => {
         this.$notify.success({
           title: '成功',
