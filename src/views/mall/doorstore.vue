@@ -180,10 +180,10 @@ export default {
     this.getList()
   },
   methods: {
-    mapTX() {
+    mapTX(lat, lng) {
       tmap.loadMap('4QVBZ-SVMKX-DV54W-TE4BK-4GMRO-5RF33').then(Tmap => {
         var _this = this
-        var myLatlng = new Tmap.LatLng(31.584617993869276, 120.29067993164062)
+        var myLatlng = new Tmap.LatLng(lat, lng)
         var myOptions = {
           zoom: 12,
           center: myLatlng,
@@ -284,7 +284,7 @@ export default {
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
-        this.mapTX()
+        this.mapTX(28.682077, 115.857821)
       })
     },
     uploadPicUrl: function(response) {
@@ -317,6 +317,8 @@ export default {
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
+        console.log(this.dataForm)
+        this.mapTX(this.dataForm.latitude, this.dataForm.longitude)
       })
     },
     updateData() {
