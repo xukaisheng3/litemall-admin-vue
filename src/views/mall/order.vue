@@ -76,6 +76,17 @@
             <el-table-column align="center" label="货品规格" prop="specifications" />
             <el-table-column align="center" label="货品价格" prop="price" />
             <el-table-column align="center" label="货品数量" prop="number" />
+            <el-table-column align="center" label="专属推广用户ID" prop="personalId" />
+            <el-table-column align="center" label="专属推广结算状态" width="120" class-name="small-padding fixed-width">
+              <template slot-scope="scope">
+                <el-tag>{{ scope.row.personalState | personalStatusFilter }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="操作" width="100" class-name="small-padding fixed-width">
+              <template slot-scope="scope">
+                <el-button v-if="scope.row.personalId !== 0 && scope.row.personalState === 0 && orderDetail.order.orderStatus === 402" type="primary" size="mini" @click="handleUpdate(scope.row)">结算</el-button>
+              </template>
+            </el-table-column>
             <el-table-column align="center" label="货品图片" prop="picUrl">
               <template slot-scope="scope">
                 <img :src="scope.row.picUrl" width="40">
@@ -106,7 +117,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
     <!-- 发货对话框 -->
     <el-dialog :visible.sync="shipDialogVisible" title="发货">
       <el-form ref="shipForm" :model="shipForm" status-icon label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
@@ -144,7 +154,7 @@
 </style>
 
 <script>
-import { listOrder, shipOrder, refundOrder, detailOrder } from '@/api/order'
+import { listOrder, shipOrder, refundOrder, detailOrder, personalOrderGoods } from '@/api/order'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import checkPermission from '@/utils/permission' // 权限判断函数
 
@@ -160,12 +170,19 @@ const statusMap = {
   402: '系统收货'
 }
 
+const personalStatusMap = {
+  0: '未结算佣金',
+  1: '已结算佣金'
+}
 export default {
   name: 'Order',
   components: { Pagination },
   filters: {
     orderStatusFilter(status) {
       return statusMap[status]
+    },
+    personalStatusFilter(status) {
+      return personalStatusMap[status]
     }
   },
   data() {
@@ -238,6 +255,21 @@ export default {
       this.shipDialogVisible = true
       this.$nextTick(() => {
         this.$refs['shipForm'].clearValidate()
+      })
+    },
+    handleUpdate(row) {
+      this.shipForm.orderGoodsId = row.id
+      personalOrderGoods(this.shipForm).then(response => {
+        this.$notify.success({
+          title: '成功',
+          message: '佣金结算成功'
+        })
+        this.getList()
+      }).catch(response => {
+        this.$notify.error({
+          title: '失败',
+          message: response.data.errmsg
+        })
       })
     },
     confirmShip() {
