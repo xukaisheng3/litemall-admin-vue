@@ -28,6 +28,14 @@ export function shipOrder(data) {
   })
 }
 
+export function personalOrderGoods(data) {
+  return request({
+    url: '/order/goods/personal',
+    method: 'post',
+    data
+  })
+}
+
 export function refundOrder(data) {
   return request({
     url: '/order/refund',
